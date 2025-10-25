@@ -1,34 +1,38 @@
 import Phaser from "phaser";
+import { HealthBar, StaminaBar } from "../models/Bar";
+import { createGame, sendAction } from "../services/api";
 
-interface GameData {
+export interface GameData {
   id: string;
   state: {
     currentPlayer: string;
     heroes: Array<any>;
     enemies: Array<any>;
   };
+  enemyMoviment: {actionIndex: number, targetId: string} | null;
 }
 
 export default class GameScene extends Phaser.Scene {
   private TILE_SIZE = 64;
-  private COLS = 25;
-  private ROWS = 20;
 
   private gameData!: GameData;
   private heroAbilities: any[] = [];
   private isClickable = false;
-  private playerMoviment = { targetId: null as string | null, ability: -1 };
-
-  private gridGraphics!: Phaser.GameObjects.Graphics;
-  private gridLabels: Phaser.GameObjects.Text[] = [];
+  private playerMoviment = { targetId: '', ability: -1 };
 
   constructor() {
     super("GameScene");
   }
 
   preload() {
+    const animations = ['idle'];
+    animations.forEach(anim => {
+      this.load.atlas(`iron_man_${anim}`, `/public/assets/iron_man/${anim}.png`, `/public/assets/iron_man/${anim}.json`);
+      this.load.atlas(`thor_${anim}`, `/public/assets/thor/${anim}.png`, `/public/assets/thor/${anim}.json`);
+    })
+
     // fundo
-    this.load.image("bg", "/public/assets/game_bg_2.png");
+    this.load.image("bg", "/public/assets/terrace.png");
 
     // heróis
     this.load.image("iron_man", "/public/assets/iron_man.png");
@@ -45,7 +49,7 @@ export default class GameScene extends Phaser.Scene {
     this.add.image(400, 200, "bg").setDisplaySize(800, 400);
 
     // criar partida via API
-    this.gameData = await this.createGame();
+    this.gameData = await createGame();
 
     this.getHeroAbilities(this.gameData.state.currentPlayer);
 
@@ -56,6 +60,7 @@ export default class GameScene extends Phaser.Scene {
       const id = obj.getData("id");
 
       if (type === "ability") {
+        console.log("ability clicked:", id);
         this.setPlayerAction(id);
       }
 
@@ -64,13 +69,6 @@ export default class GameScene extends Phaser.Scene {
         this.isClickable = false;
       }
     });
-  }
-
-  private async createGame(): Promise<GameData> {
-    const response = await fetch("http://localhost:3000/game", {
-      method: "POST"
-    });
-    return response.json();
   }
 
   private getHeroAbilities(currentPlayerId: string) {
@@ -90,16 +88,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   private async useAbility() {
-    const response = await fetch(
-      `http://localhost:3000/game/${this.gameData.id}/apply-action`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(this.playerMoviment)
-      }
-    );
-    this.gameData = await response.json();
+    this.gameData = await sendAction(this.gameData.id, this.playerMoviment);
 
+    console.log("Updated game data:", this.gameData);
     this.getHeroAbilities(this.gameData.state.currentPlayer);
     this.drawScene();
   }
@@ -110,7 +101,7 @@ export default class GameScene extends Phaser.Scene {
 
     // cria um graphics local — será removido se você usar this.children.removeAll()
     const g = this.add.graphics();
-    g.lineStyle(1, 0x00ff00, 1); // verde, largura 1
+    g.lineStyle(1, 0x000000, 1); // verde, largura 1
 
     // linhas verticais + labels no topo
     for (let x = 0; x <= width; x += this.TILE_SIZE) {
@@ -123,7 +114,7 @@ export default class GameScene extends Phaser.Scene {
       this.add.text(x + 2, 10, String(x), {
         fontFamily: 'Arial',
         fontSize: '10px',
-        color: '#00ff00'
+        color: '#000000'
       }).setDepth(1000);
     }
 
@@ -139,7 +130,7 @@ export default class GameScene extends Phaser.Scene {
       this.add.text(2, labelY, String(y), {
         fontFamily: 'Arial',
         fontSize: '10px',
-        color: '#00ff00'
+        color: '#000000'
       }).setDepth(1000);
     }
   }
@@ -149,20 +140,38 @@ export default class GameScene extends Phaser.Scene {
 
     this.add.image(400, 200, "bg").setDisplaySize(800, 400);
 
-    // desenhar heróis
-    this.gameData.state.heroes.forEach((hero, i) => {
-      const x = 64 * 3;
-      const y = 128 + i * this.TILE_SIZE;
-
-      const sprite = this.add.image(x, y, hero.id).setOrigin(0, 0).setDisplaySize(50, 50);
-
-      // vida
-      this.add.rectangle(x, y - 10, hero.stats.health, 10, 0x009c40).setOrigin(0, 0);
-      // stamina
-      this.add.rectangle(x, y + 60, hero.stats.stamina, 10, 0x005fba).setOrigin(0, 0);
+    this.add.text(352 - 98, 25, `Current: ${this.gameData.state.currentPlayer}`, {
+      fontSize: "18px",
+      color: "#000000",
+      backgroundColor: "#ffffff",
+      fontStyle: "bold"
     });
 
-    // desenhar inimigos
+    this.gameData.state.heroes.forEach((hero, i) => {
+      const isMiddle = i === 1;
+
+      const x = isMiddle ? 64 * 4 : 64 * 3;
+      const y = 100 + i * this.TILE_SIZE;
+
+      const sprite = this.add.image(x, y, hero.id).setOrigin(0, 0).setScale(0.2);
+
+      const healthBar = new HealthBar(this, {
+        x: 0,
+        y: 0 + (i * 35),
+        value: (hero.stats.health / hero.stats.health) * 100
+      });
+
+      healthBar.draw();
+
+      const staminaBar = new StaminaBar(this, {
+        x: 0,
+        y: 0 + (i * 35) + 12,
+        value: (hero.stats.stamina / hero.stats.stamina) * 100
+      });
+
+      staminaBar.draw();
+    });
+
     this.gameData.state.enemies.forEach((enemy, i) => {
       const x = 600;
       const y = 70 + i * this.TILE_SIZE;
@@ -172,26 +181,25 @@ export default class GameScene extends Phaser.Scene {
       sprite.setData("type", "enemy");
       sprite.setData("id", enemy.id);
 
-      // vida
-      this.add.rectangle(x - 50, y - 10, enemy.stats.health, 10, 0x009c40).setOrigin(0, 0);
-      // stamina
-      this.add.rectangle(x - 50, y + 60, enemy.stats.stamina, 10, 0x005fba).setOrigin(0, 0);
+      const healthBar = new HealthBar(this, {
+        x: 576,
+        y: 0 + (i * 35),
+        value: (enemy.stats.health / enemy.stats.health) * 100
+      });
+
+      healthBar.draw();
     });
 
     // desenhar habilidades
     this.heroAbilities.forEach((ability, i) => {
-      const x = 207 + i * 80;
+      const column = 64 * 4;
+      const x = column + (i * 64);
       const y = 320;
 
       const rect = this.add.rectangle(x, y, 64, 64, 0x333333).setOrigin(0, 0);
       rect.setInteractive();
       rect.setData("type", "ability");
       rect.setData("id", ability.id);
-
-      this.add.text(x + 10, y + 20, ability.name || "Skill", {
-        fontSize: "10px",
-        color: "#fff"
-      });
     });
 
     this.drawGrid()

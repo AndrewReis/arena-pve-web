@@ -1,0 +1,235 @@
+{
+  "frames": {
+    "idle_00.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_01.png": {
+      "frame": {
+        "x": 37,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_02.png": {
+      "frame": {
+        "x": 74,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_03.png": {
+      "frame": {
+        "x": 111,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_04.png": {
+      "frame": {
+        "x": 0,
+        "y": 55,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_05.png": {
+      "frame": {
+        "x": 37,
+        "y": 55,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_06.png": {
+      "frame": {
+        "x": 74,
+        "y": 55,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_07.png": {
+      "frame": {
+        "x": 111,
+        "y": 55,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_08.png": {
+      "frame": {
+        "x": 0,
+        "y": 110,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_09.png": {
+      "frame": {
+        "x": 37,
+        "y": 110,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    },
+    "idle_10.png": {
+      "frame": {
+        "x": 74,
+        "y": 110,
+        "w": 37,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 37,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 37,
+        "h": 55
+      }
+    }
+  },
+  "meta": {
+    "app": "Simple Sprite Packer",
+    "version": "1.1",
+    "image": "idle.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 148,
+      "h": 165
+    },
+    "scale": "1"
+  }
+}
